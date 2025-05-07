@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Report {
+  id                String   @id @default(cuid())
+  target            String
+  status            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  rawOutput         Json?
+  critical          Int      @default(0)
+  high             Int      @default(0)
+  medium           Int      @default(0)
+  low              Int      @default(0)
+  enhancedReport   Json?    // AI-generated comprehensive report
+  vulnerabilitiesList Vulnerability[]
+}
+
+model Vulnerability {
+  id          String   @id @default(cuid())
+  reportId    String
+  severity    String
+  title       String
+  description String
+  module      String   // Store which module found this vulnerability
+  findingType String   // Store the type of finding (e.g., xss, sql_injection)
+  details     Json?    // Store additional details as JSON
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  report      Report   @relation(fields: [reportId], references: [id])
+} 
