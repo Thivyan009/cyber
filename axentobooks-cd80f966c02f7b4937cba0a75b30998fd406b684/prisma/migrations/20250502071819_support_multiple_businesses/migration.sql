@@ -1,0 +1,2 @@
+-- This is a placeholder migration file
+-- The actual changes were reverted from the schema 
